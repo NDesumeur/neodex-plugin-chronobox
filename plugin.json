@@ -1,0 +1,27 @@
+{
+  "id": "neodex.chronobox",
+  "name": "Chronobox",
+  "version": "1.0.0",
+  "author": "NDesumeur",
+  "description": "Tout ce qui compte le temps, au même endroit : un chronomètre au centième avec tours (meilleur et pire en couleur), autant de minuteurs que tu veux en même temps avec sonnerie, un Pomodoro réglable (travail, petites et grandes pauses) et des comptes à rebours jusqu'à tes dates importantes. Les temps restent justes même si tu fermes NeoDex entre-temps.",
+  "icon": "icon.png",
+  "entry": "index.js",
+  "view": "chronobox",
+  "neobase": ">=4.0.0",
+  "type": "app",
+  "category": "Outils",
+  "mobile": true,
+  "compatibility": [
+    "windows",
+    "android",
+    "linux"
+  ],
+  "syncMode": "fusion",
+  "syncInfo": "Le chronomètre, les minuteurs, le Pomodoro et les comptes à rebours.",
+  "system": false,
+  "dependencies": {},
+  "sdk": "2.1.0",
+  "permissions": [
+    "storage"
+  ]
+}
