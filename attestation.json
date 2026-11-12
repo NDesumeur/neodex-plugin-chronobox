@@ -1,0 +1,9 @@
+{
+  "pluginId": "neodex.chronobox",
+  "repo": "NDesumeur/neodex-plugin-chronobox",
+  "version": "1.0.0",
+  "sha256": "35217b505935735ddb997f2cfe86fc69adcf94706add3b4d33e76c9611a61b19",
+  "approvedAt": "2026-11-12T06:35:38.098Z",
+  "neobase": ">=4.0.0",
+  "signature": "WGO+6l0PvdX/WjJmHJQ02kzSOWCZQbO2torAR9dkm/J78Kr/HJpb3KOKHO6ibpsD925CSr4r0LCc+nw3+aOlDw=="
+}
