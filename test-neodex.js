@@ -11,6 +11,11 @@ module.exports = async ({ pj, sleep }) => {
   await pj(`[...document.querySelectorAll('.cbCard')].pop().querySelector('.cbRow .btn').click(), 0`); await sleep(1600);
   if (!await pj(`[...document.querySelectorAll('.cbCard')].pop().classList.contains('ring')`)) throw new Error('le minuteur n\'a pas sonné');
   await pj(`[...document.querySelectorAll('.cbCard')].pop().querySelector('.x').click(), 0`);
+  // les heures de Minuteur : 1 h 30 donne une carte de 1:30:00
+  await pj(`(() => { const s = (id, v) => { const i = document.getElementById(id); i.value = v; }; s('cb_tname', 'Long'); s('cb_thour', 1); s('cb_tmin', 30); s('cb_tsec', 0); document.getElementById('cb_tadd').click(); })(), 0`); await sleep(150);
+  const long = await pj(`[...document.querySelectorAll('.cbCard')].pop().querySelector('.t').textContent`);
+  if (long !== '1:30:00') throw new Error('minuteur en heures : ' + long);
+  await pj(`[...document.querySelectorAll('.cbCard')].pop().querySelector('.x').click(), 0`);
   await click('[data-tab=pomo]');
   if (!/Travail/.test(await pj(`document.getElementById('cb_phase').textContent`))) throw new Error('pomodoro');
   await pj(`[...document.querySelectorAll('button')].find(b => b.textContent === '⏭ Passer').click(), 0`);

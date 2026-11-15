@@ -97,12 +97,12 @@ export default async function (ctx) {
   }
   // ---------- minuteurs ----------
   function buildTimers() {
-    const list = el('div', 'cbList'), add = el('div', 'cbRow'), nm = el('input', 'f'), mm = el('input', 'f cbNum'), ss = el('input', 'f cbNum');
-    nm.placeholder = 'Nom'; nm.translate = false; mm.type = ss.type = 'number'; mm.min = ss.min = 0; mm.value = 5; ss.value = 0; mm.title = 'minutes'; ss.title = 'secondes'; mm.max = 999; ss.max = 59; nm.id = 'cb_tname'; mm.id = 'cb_tmin'; ss.id = 'cb_tsec';
-    const addB = btn('+ Minuteur', () => { const dur = ((+mm.value || 0) * 60 + (+ss.value || 0)) * 1000; if (dur <= 0) return toast('Durée nulle'); st.timers.push({id: Date.now(), name: nm.value.trim() || fmt(dur, false), dur, acc: 0, start: null}); nm.value = ''; save(); drawList(); }, 'main');
-    addB.id = 'cb_tadd'; add.append(nm, mm, el('span', 'hint', 'min'), ss, el('span', 'hint', 's'), addB);
-    for (const m of [1, 3, 5, 10, 15, 30, 60]) add.append(btn(m + ' min', () => { mm.value = m; ss.value = 0; }));
-    body.append(add, list);
+    const list = el('div', 'cbList'), add = el('div', 'cbRow'), quick = el('div', 'cbRow'), nm = el('input', 'f'), hh = el('input', 'f cbNum'), mm = el('input', 'f cbNum'), ss = el('input', 'f cbNum');
+    nm.placeholder = 'Nom'; nm.translate = false; hh.type = mm.type = ss.type = 'number'; hh.min = mm.min = ss.min = 0; hh.value = 0; mm.value = 5; ss.value = 0; hh.title = 'heures'; mm.title = 'minutes'; ss.title = 'secondes'; hh.max = 99; mm.max = 999; ss.max = 59; hh.id = 'cb_thour'; nm.id = 'cb_tname'; mm.id = 'cb_tmin'; ss.id = 'cb_tsec';
+    const addB = btn('+ Minuteur', () => { const dur = Math.min(99 * 3600, (+hh.value || 0) * 3600 + (+mm.value || 0) * 60 + (+ss.value || 0)) * 1000; if (dur <= 0) return toast('Durée nulle'); st.timers.push({id: Date.now(), name: nm.value.trim() || fmt(dur, false), dur, acc: 0, start: null}); nm.value = ''; save(); drawList(); }, 'main');
+    addB.id = 'cb_tadd'; add.append(nm, hh, el('span', 'hint', 'h'), mm, el('span', 'hint', 'min'), ss, el('span', 'hint', 's'), addB);
+    for (const m of [1, 3, 5, 10, 15, 25, 30, 45, 60, 120]) quick.append(btn(m < 60 ? m + ' min' : m / 60 + ' h', () => { hh.value = m / 60 | 0; mm.value = m % 60; ss.value = 0; }));
+    body.append(add, quick, list);
     const cards = new Map();
     function drawList() {
       cards.clear(); list.replaceChildren(...st.timers.map(t => { const c = el('div', 'cbCard'), n = el('div', 'n', t.name), tt = el('div', 't'), bar = el('div', 'cbBar'), fill = el('i'), row = el('div', 'cbRow'), x = el('span', 'x', '✕');

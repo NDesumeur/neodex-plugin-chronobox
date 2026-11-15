@@ -34,3 +34,7 @@ The stopwatch, the timers, the Pomodoro and the countdowns are kept in the plugi
 
 - Pixel art style of the recent apps: big digits drawn pixel by pixel on a black screen, with the ghost "8"s of an LCD screen; the stopwatch hundredths are smaller, in lilac.
 - Digits grow with the window; pixel art timer and countdown cards, larger text, full-width app.
+
+## Timer joins Chronobox
+
+The Timer plugin is replaced by Chronobox's « Timers » tab: several timers at once, set in hours, minutes and seconds (up to 99 h), with presets from 1 min to 2 h.

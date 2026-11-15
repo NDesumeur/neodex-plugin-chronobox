@@ -34,3 +34,7 @@ Le chronomètre, les minuteurs, le Pomodoro et les comptes à rebours sont gard�
 
 - Style pixel art des applis récentes : gros chiffres dessinés pixel par pixel sur un écran noir, avec les « 8 » fantômes d'un écran LCD ; les centièmes du chronomètre plus petits, en lilas.
 - Les chiffres grandissent avec la fenêtre ; cartes des minuteurs et des comptes à rebours en pixel art, textes plus grands, appli en pleine largeur.
+
+## Minuteur rejoint Chronobox
+
+Le plugin Minuteur est remplacé par l'onglet « Minuteurs » de Chronobox : plusieurs minuteurs en même temps, réglés en heures, minutes et secondes (jusqu'à 99 h), avec des durées toutes prêtes de 1 min à 2 h.
