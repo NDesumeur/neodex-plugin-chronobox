@@ -29,3 +29,8 @@ Times are computed from the saved start time: they stay right if you close NeoDe
 ## Data
 
 The stopwatch, the timers, the Pomodoro and the countdowns are kept in the plugin folder. Permission: `storage` only.
+
+## Version 1.1.0
+
+- Pixel art style of the recent apps: big digits drawn pixel by pixel on a black screen, with the ghost "8"s of an LCD screen; the stopwatch hundredths are smaller, in lilac.
+- Digits grow with the window; pixel art timer and countdown cards, larger text, full-width app.

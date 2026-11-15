@@ -4,28 +4,54 @@
 const CSS = `
 .cbTabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .cbTabs .btn,.cbRow .btn{width:auto;margin:0;padding:6px 12px}
-.cbBig{font:64px monospace;color:#fff;text-align:center;letter-spacing:2px;margin:10px 0;font-variant-numeric:tabular-nums}
-.cbBig small{font-size:32px;color:var(--lilac)}
+.cbBig{text-align:center;margin:12px auto;padding:clamp(10px,2vh,22px) clamp(14px,2.4vw,34px);background:#05010b;box-shadow:0 0 0 3px var(--line),0 0 0 6px #05010b,inset 0 4px 0 rgba(255,255,255,.04);width:max-content;max-width:100%;box-sizing:border-box;overflow:hidden}
+.cbPx{display:block;image-rendering:pixelated;max-width:100%;margin:0 auto}
+.cbSr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .cbRow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;margin:8px 0}
 .cbRow .f{width:auto;margin:0}
-.cbLaps{font:14px monospace;max-height:240px;overflow:auto;margin-top:8px}
+.cbLaps{font:16px monospace;max-height:240px;overflow:auto;margin-top:8px}
 .cbLaps div{display:flex;justify-content:space-between;padding:3px 8px;border-bottom:1px solid #241c40;color:var(--lilac)}
 .cbLaps .best{color:#6ae06a}.cbLaps .worst{color:#ff4fb0}
-.cbList{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:10px}
-.cbCard{background:var(--bg0);border:2px solid var(--line);padding:10px;position:relative}
+.cbList{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:10px}
+.cbCard{background:var(--bg0);border:2px solid var(--line);box-shadow:4px 4px 0 #05010b;padding:12px;position:relative}
 .cbCard.ring{border-color:#ffd34f;animation:cbBlink 1s steps(2) infinite}
 @keyframes cbBlink{50%{border-color:var(--line)}}
-.cbCard .t{font:30px monospace;color:#fff;text-align:center;margin:6px 0;font-variant-numeric:tabular-nums}
-.cbCard .n{font-size:13px;color:var(--lilac);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbCard .t{text-align:center;margin:8px 0;padding:8px 4px;background:#05010b;box-shadow:inset 0 0 0 2px var(--line)}
+.cbCard .n{font-size:15px;color:var(--lilac);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cbCard .x{position:absolute;right:6px;top:4px;cursor:var(--cp,pointer);color:var(--muted)}
 .cbBar{height:8px;background:#1a1430;border:1px solid #000;margin-top:6px}
 .cbBar i{display:block;height:100%;background:var(--magenta)}
 .cbCard .cbRow{justify-content:flex-start;margin:6px 0 0}
 .cbCard .btn{padding:3px 10px!important}
 .cbNum{width:64px!important}
-.cbPhase{text-align:center;font-size:18px;color:#ffd34f;margin-top:4px}
-.cbDots{text-align:center;font-size:18px;letter-spacing:6px;color:var(--magenta)}
+.cbPhase{text-align:center;font-size:22px;color:#ffd34f;margin-top:4px}
+.cbDots{text-align:center;font-size:24px;letter-spacing:6px;color:var(--magenta)}
 `;
+// les gros chiffres : une police 5 × 7 dessinée à la main, agrandie sans lissage ; derrière chaque chiffre, un « 8 » fantôme comme sur un écran LCD
+const PXD = {0: '01110100011001110101110011000101110', 1: '00100011000010000100001000010001110', 2: '01110100010000100010001000100011111', 3: '11110000010000101110000010000111110',
+  4: '00010001100101010010111110001000010', 5: '11111100001111000001000011000101110', 6: '01110100001000011110100011000101110', 7: '11111000010001000100010000100001000',
+  8: '01110100011000101110100011000101110', 9: '01110100011000101111000010000101110', ':': '00000001000010000000001000010000000', '.': '00000000000000000000000000110001100',
+  '-': '00000000000000011111000000000000000', '+': '00000001000010011111001000010000000', ' ': '00000000000000000000000000000000000', j: '00010000000001000010000101001001100'};
+function pxText(g, parts, ghost) {  // parts : [[texte, échelle, couleur]] ; renvoie la largeur
+  let x = 0; const H = Math.max(...parts.map(q => q[1])) * 7;
+  for (const [t, s, col] of parts) for (const ch of t) {
+    const m = PXD[ch] ?? PXD[' '], w = ch === ':' || ch === '.' ? 3 : 5, dx = ch === ':' || ch === '.' ? -1 : 0, y0 = H - s * 7;
+    if (g) for (let k = 0; k < 35; k++) { const cx = k % 5 + dx, on = m[k] === '1', gh = ghost && w === 5 && PXD[8][k] === '1'; if ((on || gh) && cx >= 0 && cx < w) { g.fillStyle = on ? col : ghost; g.fillRect(x + cx * s, y0 + Math.floor(k / 5) * s, s, s); } }
+    x += (w + 1) * s;
+  }
+  return x;
+}
+function pxTime(box, parts) {  // dessine dans box (une seule fois par texte) ; le texte reste lisible pour les lecteurs d'écran et le test
+  const text = parts.map(q => q[0]).join(''), key = text + '|' + parts.map(q => q[1]).join(',');
+  if (box.dataset.k === key) return; box.dataset.k = key;
+  let c = box.querySelector('canvas'), sr = box.querySelector('.cbSr');
+  if (!c) { c = document.createElement('canvas'); c.className = 'cbPx'; sr = document.createElement('span'); sr.className = 'cbSr'; box.replaceChildren(sr, c); }
+  sr.textContent = text;
+  const S = Math.max(...parts.map(q => q[1])); c.width = Math.max(1, pxText(null, parts) + S); c.height = S * 8; const g = c.getContext('2d');
+  g.save(); g.translate(Math.ceil(S / 3), Math.ceil(S / 3)); pxText(g, parts.map(q => [q[0], q[1], '#05010b'])); g.restore();  // l'ombre
+  pxText(g, parts, 'rgba(255,255,255,.06)');
+}
+const bigS = () => Math.max(6, Math.min(14, Math.round(innerHeight / 88))), cardS = () => Math.max(4, Math.min(7, Math.round(innerHeight / 170)));
 const pad = (n, w = 2) => String(Math.floor(n)).padStart(w, '0');
 function fmt(ms, cs = true) { const neg = ms < 0; ms = Math.abs(ms); const h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, s = Math.floor(ms / 1000) % 60;
   return (neg ? '-' : '') + (h ? h + ':' + pad(m) : pad(m)) + ':' + pad(s) + (cs ? '.' + pad(ms / 10 % 100) : ''); }
@@ -41,6 +67,7 @@ export default async function (ctx) {
   if (!ctx.host) { view.textContent = "Ce plugin doit être approuvé par NeoDex pour s'ouvrir."; return; }
   const { el, toast } = ctx.host;
   ctx.host.addStyle(CSS);
+  console.assert(pxText(null, [['12:34', 2, '#fff']]) === 4 * 12 + 8 && Object.values(PXD).every(m => m.length === 35), 'chronobox : police pixel');
   console.assert(fmt(3723456) === '1:02:03.45' && fmt(59999, false) === '00:59' && elapsed({acc: 500, start: 1000}, 3000) === 2500 && fmtDays(90061000)[0] === 1, 'chronobox : formats');
   let data = null; try { data = await ctx.folder.read('chronobox'); } catch {}
   const st = {tab: data?.tab || 'stop', sw: data?.sw || {acc: 0, start: null, laps: []}, timers: data?.timers || [{id: 1, name: 'Thé', dur: 180000, acc: 0, start: null}, {id: 2, name: 'Pâtes', dur: 600000, acc: 0, start: null}],
@@ -49,7 +76,7 @@ export default async function (ctx) {
   const ring = (msg) => { if (st.sound) beep(); toast(msg); try { if (document.hidden) new Notification('Chronobox', {body: msg}); } catch {} };
   // ---------- l'interface ----------
   view.innerHTML = '';
-  const wrap = el('div', 'appWrap'), head = el('div', 'agHead'), tabs = el('div', 'cbTabs'), body = el('div', 'sysCard px');
+  const wrap = el('div', 'appWrap wide'), head = el('div', 'agHead'), tabs = el('div', 'cbTabs'), body = el('div', 'sysCard px');
   head.append(el('span', 'label', 'Chronobox · le temps qui passe')); wrap.append(head, tabs, body); view.append(wrap);
   const TABS = [['stop', '⏱ Chronomètre'], ['timer', '⏲ Minuteurs'], ['pomo', '🍅 Pomodoro'], ['event', '📅 Comptes à rebours']];
   function drawTabs() { tabs.replaceChildren(...TABS.map(([k, t]) => { const b = el('button', 'btn px' + (st.tab === k ? ' main' : ''), t); b.dataset.tab = k; b.onclick = () => { st.tab = k; save(); drawTabs(); build(); }; return b; }),
@@ -65,7 +92,7 @@ export default async function (ctx) {
     function drawLaps() { const L = st.sw.laps, d = L.map((t, i) => t - (L[i - 1] || 0)), mn = Math.min(...d), mx = Math.max(...d);
       laps.replaceChildren(...L.map((t, i) => [t, i]).reverse().map(([t, i]) => { const r = el('div', d.length > 1 && d[i] === mn ? 'best' : d.length > 1 && d[i] === mx ? 'worst' : ''); r.append(el('span', '', '#' + (i + 1)), el('span', '', '+' + fmt(d[i])), el('span', '', fmt(t))); return r; })); }
     function draw() { const on = st.sw.start !== null; go.textContent = on ? '❚❚ Pause' : st.sw.acc ? '▶ Reprendre' : '▶ Démarrer'; lap.textContent = on ? '⚑ Tour' : '⟲ Remettre à zéro'; lap.disabled = !on && !st.sw.acc; }
-    refresh = now => { const t = elapsed(st.sw, now), s = fmt(t), k = s.lastIndexOf('.'); big.replaceChildren(s.slice(0, k), el('small', '', s.slice(k))); };
+    refresh = now => { const t = elapsed(st.sw, now), s = fmt(t), k = s.lastIndexOf('.'), S = bigS(); pxTime(big, [[s.slice(0, k), S, '#ffffff'], [s.slice(k), Math.round(S * .55), '#d9c6ff']]); };
     draw(); drawLaps();
   }
   // ---------- minuteurs ----------
@@ -86,7 +113,7 @@ export default async function (ctx) {
         const upd = () => { const on = t.start !== null, left = t.dur - elapsed(t, Date.now()); go.textContent = left <= 0 ? '⟲ Relancer' : on ? '❚❚' : '▶'; }; upd();
         cards.set(t, {c, tt, fill, upd}); return c; }));
     }
-    refresh = now => { for (const [t, k] of cards) { const left = t.dur - elapsed(t, now); k.tt.textContent = fmt(Math.max(0, left) + (left > 0 ? 999 : 0), false); k.fill.style.width = Math.min(100, elapsed(t, now) / t.dur * 100) + '%'; k.c.classList.toggle('ring', left <= 0 && t.start !== null); } };
+    refresh = now => { for (const [t, k] of cards) { const left = t.dur - elapsed(t, now); pxTime(k.tt, [[fmt(Math.max(0, left) + (left > 0 ? 999 : 0), false), cardS(), left <= 0 ? '#ffd34f' : '#ffffff']]); k.fill.style.width = Math.min(100, elapsed(t, now) / t.dur * 100) + '%'; k.c.classList.toggle('ring', left <= 0 && t.start !== null); } };
     drawList();
   }
   // ---------- Pomodoro ----------
@@ -101,7 +128,7 @@ export default async function (ctx) {
     body.append(ph, big, dots, row, cfg);
     function draw() { go.textContent = p.start !== null ? '❚❚ Pause' : '▶ Démarrer'; ph.replaceChildren(el('span', '', PHASES[p.phase])); dots.textContent = '●'.repeat(p.done % p.every) + '○'.repeat(p.every - p.done % p.every); }
     function next(auto) { if (p.phase === 0) { p.done++; p.phase = p.done % p.every === 0 ? 2 : 1; } else p.phase = 0; p.acc = 0; p.start = auto ? Date.now() : null; save(); draw(); if (auto) ring(PHASES[p.phase] + ' !'); }
-    refresh = now => { let left = phaseLen(p) - elapsed(p, now); if (left <= 0 && p.start !== null) { next(true); left = phaseLen(p); } big.textContent = fmt(Math.max(0, left) + 999, false); };
+    refresh = now => { let left = phaseLen(p) - elapsed(p, now); if (left <= 0 && p.start !== null) { next(true); left = phaseLen(p); } pxTime(big, [[fmt(Math.max(0, left) + 999, false), bigS(), p.phase ? '#7ee07a' : '#ffffff']]); };
     draw();
   }
   // ---------- comptes à rebours vers une date ----------
@@ -114,7 +141,7 @@ export default async function (ctx) {
     function drawList() { cards.length = 0; list.replaceChildren(...st.events.map(e => { const c = el('div', 'cbCard'), n = el('div', 'n', e.name), dd = el('div', 't'), sub = el('div', 'hint'), x = el('span', 'x', '✕');
       n.translate = false; dd.translate = false; sub.translate = false; sub.textContent = new Date(e.at).toLocaleString('fr-FR', {dateStyle: 'full', timeStyle: 'short'}); x.onclick = () => { st.events = st.events.filter(k => k !== e); save(); drawList(); };
       c.append(x, n, dd, sub); cards.push([e, dd]); return c; })); }
-    refresh = now => { for (const [e, dd] of cards) { const left = e.at - now, [days, rest] = fmtDays(left); dd.replaceChildren(left < 0 ? '+' : '', String(days), el('small', '', ' j '), rest); dd.style.color = left < 0 ? 'var(--muted)' : ''; } };
+    refresh = now => { for (const [e, dd] of cards) { const left = e.at - now, [days, rest] = fmtDays(left); const S = cardS(), col = left < 0 ? '#8f7bb8' : '#ffffff'; pxTime(dd, [[(left < 0 ? '+' : '') + days, S, col], [' j ', Math.max(3, S - 2), '#d9c6ff'], [rest, S, col]]); } };
     drawList();
   }
   function build() { body.replaceChildren(); ({stop: buildStop, timer: buildTimers, pomo: buildPomo, event: buildEvents})[st.tab](); refresh(Date.now()); }

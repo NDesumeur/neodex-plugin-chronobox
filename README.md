@@ -29,3 +29,8 @@ Les temps sont calculés à partir de l'heure de départ enregistrée : ils rest
 ## Données
 
 Le chronomètre, les minuteurs, le Pomodoro et les comptes à rebours sont gardés dans le dossier du plugin. Autorisation : `storage` seulement.
+
+## Version 1.1.0
+
+- Style pixel art des applis récentes : gros chiffres dessinés pixel par pixel sur un écran noir, avec les « 8 » fantômes d'un écran LCD ; les centièmes du chronomètre plus petits, en lilas.
+- Les chiffres grandissent avec la fenêtre ; cartes des minuteurs et des comptes à rebours en pixel art, textes plus grands, appli en pleine largeur.

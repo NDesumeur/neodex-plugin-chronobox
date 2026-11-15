@@ -18,6 +18,7 @@ module.exports = async ({ pj, sleep }) => {
   await pj(`[...document.querySelectorAll('button')].find(b => b.textContent === '⟲ Recommencer').click(), 0`);
   await click('[data-tab=event]'); await sleep(100);
   if (!/Nouvel an/.test(await pj(`document.querySelector('.cbList').textContent`))) throw new Error('compte à rebours');
-  await click('[data-tab=timer]'); await sleep(200);
+  await click('[data-tab=stop]'); await click('#cb_go'); await sleep(1300);  // la capture : les gros chiffres du chronomètre
+  if (!await pj(`!!document.querySelector('#cb_sw canvas.cbPx')`)) throw new Error('pas de chiffres en pixels');
   return 'chronomètre, minuteur, Pomodoro et compte à rebours ok';
 };
