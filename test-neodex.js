@@ -21,6 +21,17 @@ module.exports = async ({ pj, sleep }) => {
   await pj(`[...document.querySelectorAll('button')].find(b => b.textContent === '⏭ Passer').click(), 0`);
   if (!/Petite pause/.test(await pj(`document.getElementById('cb_phase').textContent`))) throw new Error('pomodoro passer');
   await pj(`[...document.querySelectorAll('button')].find(b => b.textContent === '⟲ Recommencer').click(), 0`);
+  // le mode concentration : le travail lancé demande à NeoDex de bloquer les sites ; un temps de travail fini plante un arbre dans la forêt du jour
+  const CB = `[...document.querySelectorAll('.appWrap')].map(w => w.parentElement).find(v => v.__cb).__cb`;
+  if (!await pj(`!!document.getElementById('cb_focus')?.checked && !!document.getElementById('cb_tree')`)) throw new Error('pas de mode concentration ou pas d’arbre');
+  await click('#cb_pgo'); await sleep(800);
+  const f1 = await pj(`${CB}.lastFocus`);
+  if (!f1 || !(f1.until > Date.now()) || !f1.block.includes('youtube.com')) throw new Error('mode concentration pas allumé : ' + JSON.stringify(f1));
+  await pj(`(() => { const p = ${CB}.st.pomo; p.start = Date.now() - p.work * 60000 - 50; return 0; })()`); await sleep(800);
+  const f2 = await pj(`${CB}.lastFocus`), forest = await pj(`document.querySelectorAll('.cbForest canvas').length`), ph = await pj(`document.getElementById('cb_phase').textContent`);
+  if (f2?.until !== 0) throw new Error('mode concentration pas coupé à la pause : ' + JSON.stringify(f2));
+  if (forest < 1 || !/pause/i.test(ph)) throw new Error('pas d’arbre planté : ' + forest + ' / ' + ph);
+  await pj(`[...document.querySelectorAll('button')].find(b => b.textContent === '⟲ Recommencer').click(), 0`);
   await click('[data-tab=event]'); await sleep(100);
   if (!/Nouvel an/.test(await pj(`document.querySelector('.cbList').textContent`))) throw new Error('compte à rebours');
   await click('[data-tab=stop]'); await click('#cb_go'); await sleep(1300);  // la capture : les gros chiffres du chronomètre

@@ -1,13 +1,14 @@
 {
   "id": "neodex.chronobox",
   "name": "Chronobox",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "NDesumeur",
   "description": "Tout ce qui compte le temps, au même endroit : un chronomètre au centième avec tours (meilleur et pire en couleur), autant de minuteurs que tu veux en même temps avec sonnerie, un Pomodoro réglable (travail, petites et grandes pauses) et des comptes à rebours jusqu'à tes dates importantes. Les temps restent justes même si tu fermes NeoDex entre-temps. Chronobox reprend tout Minuteur : les minuteurs se règlent en heures, minutes et secondes (jusqu'à 99 h) et de nouvelles durées toutes prêtes (25 min, 45 min, 2 h).",
   "icon": "icon.png",
   "entry": "index.js",
   "view": "chronobox",
   "neobase": ">=4.0.0",
+  "neodex": ">=3.4.2",
   "type": "app",
   "category": "Outils",
   "mobile": true,
@@ -22,6 +23,7 @@
   "dependencies": {},
   "sdk": "2.1.0",
   "permissions": [
-    "storage"
+    "storage",
+    "focus"
   ]
 }

@@ -6,6 +6,10 @@ Tout ce qui compte le temps, au même endroit.
 
 ![Chronobox](screenshots/1.jpg)
 
+## Mode concentration (nouveau en 1.3.0)
+
+Pendant le travail du Pomodoro : notifications en silence, sites bloqués, un arbre qui pousse et les statistiques de la semaine.
+
 ## Chronomètre
 
 Au centième de seconde, avec **pause / reprendre** et des **tours** : chaque tour affiche son temps et le total, le plus rapide en vert et le plus lent en rose.
@@ -17,6 +21,12 @@ Autant de minuteurs que tu veux, qui tournent en même temps : un nom, des minut
 ## Pomodoro
 
 Travail, petite pause, grande pause, avec leurs durées réglables (25, 5 et 15 min au départ) et une grande pause toutes les 4 séances. Les phases s'enchaînent toutes seules avec une sonnerie ; **⏭ Passer** saute à la suivante.
+
+## Mode concentration (1.3.0)
+
+Dans l’onglet Pomodoro, coche **Mode concentration** : pendant chaque temps de travail, NeoDex met ses notifications en silence et bloque les sites de la liste (YouTube, Twitch, Reddit, X, TikTok, Instagram et Facebook au départ ; tu la changes comme tu veux). Une page calme dit jusqu’à quelle heure. Pendant les pauses, tout revient. Il faut NeoDex 3.4.2 ou plus, et l’autorisation « Mode concentration ».
+
+Pendant le travail, **un arbre pousse** : graine, pousse, plant, jeune arbre, grand arbre. Chaque temps de travail terminé le plante dans **ta forêt du jour**. **Cette semaine** montre tes minutes de travail jour par jour et le nombre d’arbres plantés.
 
 ## Comptes à rebours
 
