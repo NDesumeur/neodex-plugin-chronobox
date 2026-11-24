@@ -1,9 +1,9 @@
 {
   "pluginId": "neodex.chronobox",
   "repo": "NDesumeur/neodex-plugin-chronobox",
-  "version": "1.2.0",
-  "sha256": "8f2744bce979df6071802ff775f111062b2652cb53419197718d21fdba4eae80",
-  "approvedAt": "2026-11-16T04:14:34.685Z",
+  "version": "1.3.0",
+  "sha256": "89af03b9bb2d41b5123b941fc56e066b153d9d30a4952bd3f2c27957a0904c04",
+  "approvedAt": "2026-11-24T15:56:20.276Z",
   "neobase": ">=4.0.0",
-  "signature": "5B5lQCl10jxlDf4Ff1fMpwBlOLmCjUoKostajYaq6lUNf+AM7E8vEfZsOmkt1GTJiMp1tkGYYvcq3E2NY13hDA=="
+  "signature": "3MBVNlVSArQjt9yJbvtsjB9mlMnRelsmErWuJYTPk1OJYH9jUy1GinyEkDkMeEOlaRmK8eGu8nMsMuBXaghoCA=="
 }
